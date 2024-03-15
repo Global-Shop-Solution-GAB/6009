@@ -1,0 +1,878 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.frmSerial..Create(BaseForm)
+Gui.frmSerial..Caption("Serial Maintenance")
+Gui.frmSerial..Size(898,837)
+Gui.frmSerial..MinX(0)
+Gui.frmSerial..MinY(0)
+Gui.frmSerial..Position(0,0)
+Gui.frmSerial..AlwaysOnTop(False)
+Gui.frmSerial..FontName("Tahoma")
+Gui.frmSerial..FontSize(8.25)
+Gui.frmSerial..ControlBox(True)
+Gui.frmSerial..MaxButton(False)
+Gui.frmSerial..MinButton(False)
+Gui.frmSerial..MousePointer(0)
+Gui.frmSerial..Moveable(True)
+Gui.frmSerial..Sizeable(True)
+Gui.frmSerial..ShowInTaskBar(True)
+Gui.frmSerial..TitleBar(True)
+Gui.frmSerial..Event(UnLoad,frmSerial_UnLoad)
+Gui.frmSerial.GsGridSerial.Create(GsGridControl)
+Gui.frmSerial.GsGridSerial.Enabled(True)
+Gui.frmSerial.GsGridSerial.Visible(True)
+Gui.frmSerial.GsGridSerial.Zorder(0)
+Gui.frmSerial.GsGridSerial.Size(861,748)
+Gui.frmSerial.GsGridSerial.Position(19,38)
+Gui.frmSerial.GsGridSerial.Event(CellValueChanged,GsGridSerial_CellValueChanged)
+Gui.frmSerial.GsGridSerial.Event(RowCellClick,GsGridSerial_RowCellClick)
+Gui.frmSerial.cmdSave.Create(Button)
+Gui.frmSerial.cmdSave.Enabled(True)
+Gui.frmSerial.cmdSave.Visible(True)
+Gui.frmSerial.cmdSave.Zorder(0)
+Gui.frmSerial.cmdSave.Size(75,23)
+Gui.frmSerial.cmdSave.Position(808,9)
+Gui.frmSerial.cmdSave.Caption("Save")
+Gui.frmSerial.cmdSave.FontName("Tahoma")
+Gui.frmSerial.cmdSave.FontSize(8.25)
+Gui.frmSerial.cmdSave.Event(Click,cmdSave_Click)
+Gui.frmGenSerial..Create(BaseForm)
+Gui.frmGenSerial..Caption("Generate Serial")
+Gui.frmGenSerial..Size(395,176)
+Gui.frmGenSerial..MinX(0)
+Gui.frmGenSerial..MinY(0)
+Gui.frmGenSerial..Position(0,0)
+Gui.frmGenSerial..AlwaysOnTop(False)
+Gui.frmGenSerial..FontName("Tahoma")
+Gui.frmGenSerial..FontSize(8.25)
+Gui.frmGenSerial..ControlBox(True)
+Gui.frmGenSerial..MaxButton(False)
+Gui.frmGenSerial..MinButton(False)
+Gui.frmGenSerial..MousePointer(0)
+Gui.frmGenSerial..Moveable(True)
+Gui.frmGenSerial..Sizeable(True)
+Gui.frmGenSerial..ShowInTaskBar(True)
+Gui.frmGenSerial..TitleBar(True)
+Gui.frmGenSerial..Event(UnLoad,frmGenSerial_UnLoad)
+Gui.frmGenSerial.cmdGenerate.Create(Button)
+Gui.frmGenSerial.cmdGenerate.Enabled(True)
+Gui.frmGenSerial.cmdGenerate.Visible(True)
+Gui.frmGenSerial.cmdGenerate.Zorder(0)
+Gui.frmGenSerial.cmdGenerate.Size(84,23)
+Gui.frmGenSerial.cmdGenerate.Position(292,9)
+Gui.frmGenSerial.cmdGenerate.Caption("Generate Serial")
+Gui.frmGenSerial.cmdGenerate.FontName("Tahoma")
+Gui.frmGenSerial.cmdGenerate.FontSize(8.25)
+Gui.frmGenSerial.cmdGenerate.Event(Click,cmdGenerate_Click)
+Gui.frmGenSerial.txtCustomer.Create(TextBox,"",True,100,20,0,14,42,True,0,"Tahoma",8.25,,1)
+Gui.frmGenSerial.txtCustomer.Locked(True)
+Gui.frmGenSerial.lbl1.Create(Label,"Customer",True,46,13,0,15,22,True,0,"Tahoma",8.25,,0,0)
+Gui.frmGenSerial.lbl1.BorderStyle(0)
+Gui.frmGenSerial.cmdCustBrow.Create(Button)
+Gui.frmGenSerial.cmdCustBrow.Enabled(True)
+Gui.frmGenSerial.cmdCustBrow.Visible(True)
+Gui.frmGenSerial.cmdCustBrow.Zorder(0)
+Gui.frmGenSerial.cmdCustBrow.Size(25,19)
+Gui.frmGenSerial.cmdCustBrow.Position(117,43)
+Gui.frmGenSerial.cmdCustBrow.Caption("^")
+Gui.frmGenSerial.cmdCustBrow.FontName("Tahoma")
+Gui.frmGenSerial.cmdCustBrow.FontSize(8.25)
+Gui.frmGenSerial.cmdCustBrow.Event(Click,cmdCustBrow_Click)
+Gui.frmGenSerial.lbl2.Create(Label,"WO Qty",True,39,13,0,156,27,True,0,"Tahoma",8.25,,0,0)
+Gui.frmGenSerial.lbl2.BorderStyle(0)
+Gui.frmGenSerial.txtWOQTY.Create(TextBox,"",True,100,20,0,155,43,True,0,"Tahoma",8.25,,1)
+Gui.frmGenSerial.txtWOQTY.Locked(True)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+Program.Sub.Main.Start
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+f.Intrinsic.Control.Try
+V.Global.bSave.Declare
+v.Local.ssql.Declare
+V.Local.bEditGrp.Declare(Boolean)
+
+
+f.Intrinsic.Control.If(v.Caller.Switches.UCase,=,"P")
+	f.Intrinsic.Control.CallSub(JOB_Browser)
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,31825)
+	'change the script 1 
+	v.Passed.000006.Set("Create SerialNo")
+	v.Passed.000007.set("Print Serial")
+	'lock the textboxes and grid
+	'Lock only if user is not in SERGRP Group BM 3/4/21
+	F.Global.Security.IsInGroup(v.Caller.User,"SERGRP",V.Local.bEditGrp)
+	F.Intrinsic.Control.If(V.Local.bEditGrp, =, "False")
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000082,"LOCK","1")
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000022,"LOCK","1")
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000023,"LOCK","1")
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000024,"LOCK","1")
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000025,"LOCK","1")	
+		f.Intrinsic.UI.ChangeCallerProperty(v.Passed.AUX001,"LOCK","1")	
+		'invalid interface item 
+		'f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000030,"LOCK","1")	
+	F.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,31826)
+'script 1 button 
+	F.ODBC.Connection!conx.OpenCompanyConnection(300)
+	f.Intrinsic.Control.CallSub(CheckTable)
+	f.Intrinsic.Control.CallSub(LoadSerial_Data)
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,31827)
+'script 2 button 
+'Print Serial
+	f.Intrinsic.Control.CallSub(Print_Serial,"WO",Variable.Passed.009000,"SUFFIX",Variable.Passed.009001)
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,31833)
+'pre-process hook
+	F.ODBC.Connection!conx.OpenCompanyConnection(300)
+	f.Intrinsic.String.Build("UPDATE GCG_6009_Serial set LCOUNT = LCOUNT_TEMP where Customer = '{0}'",v.Passed.Global.Trim,v.Local.ssql)
+f.ODBC.Connection!conx.execute(v.Local.ssql)
+	f.ODBC.Connection!conx.execute(v.Local.ssql)		
+	f.Intrinsic.Control.CallSub(frmGenSerial_UnLoad)
+f.Intrinsic.Control.Else
+	f.Intrinsic.Control.CallSub(Load_GridMaint)
+	gui.frmSerial..Show
+	gui.frmSerial.GsGridSerial.Anchor(7)
+f.Intrinsic.Control.endif
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.cmdSave_Click.Start
+f.Intrinsic.Control.Try
+
+F.Data.DataTable.AcceptChanges("DTData")
+F.Data.DataView.Create("DTData","DVSave",22,"len(Customer)>0","")
+f.ODBC.Connection!conx.execute("delete from GCG_6009_Serial")
+f.Data.DataView.ToDataTableDistinct("DTData","DVSave","DTsave","CUSTOMER*!*ALPHA_NUMERIC*!*USE_PART*!*PREFIX*!*SUFFIX*!*OMIT_CHARS*!*LCOUNT*!*HIDDEN*!*MAX_COUNT*!*MAX_COUNT_LENGTH*!*ADDED_USER*!*MODIFIED_USER*!*ADDED_DATETIME*!*MODIFIED_DATETIME")
+
+F.Data.DataTable.SaveToDB("DTsave","conx","GCG_6009_Serial","Customer",256)
+f.Data.DataView.Close("DTData","DVSave")
+f.Data.DataTable.Close("DTsave")
+v.Global.bSave.set(false)
+
+f.Intrinsic.UI.Msgbox("Data saved successfully")
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+
+Program.Sub.cmdSave_Click.End
+Program.Sub.frmSerial_UnLoad.Start
+f.Intrinsic.Control.Try
+variable.local.returnvalue.Declare(long)
+
+f.Intrinsic.Control.If(v.Screen.frmSerial!cmdSave.Enabled)
+'save permission
+F.Intrinsic.Control.If(V.Global.bSave,=,True)
+		Function.Intrinsic.UI.MsgBox("Changes not saved, Do you want to save the changes ?", "Confirm", 4, variable.local.returnvalue)
+		F.Intrinsic.Control.If(variable.local.returnvalue,=,6)
+			f.Intrinsic.Control.CallSub(cmdSave_Click)
+		f.Intrinsic.Control.EndIf 
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.endif
+	
+f.Intrinsic.Control.If(V.ODBC.conx.State,=,1)
+	f.Intrinsic.Control.If(v.DataTable.DTData.Exists,=,True)
+		f.Data.DataTable.Close("DTData")
+	f.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!conx.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.UnBlockEvents 
+		f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+		F.Intrinsic.UI.CloseWaitDialog
+	f.Intrinsic.Control.EndTry
+	
+
+Program.Sub.frmSerial_UnLoad.End
+
+Program.Sub.GsGridSerial_CellValueChanged.Start
+v.Global.bSave.Set(true)
+Program.Sub.GsGridSerial_CellValueChanged.End
+
+Program.Sub.GsGridSerial_RowCellClick.Start
+f.Intrinsic.Control.Try
+ 
+f.Intrinsic.Control.BlockEvents 
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+F.Data.DataTable.AcceptChanges("DTData")
+
+
+F.Intrinsic.Control.If(V.Args.Column.UCase,=,"DELETE_ROW")
+	F.Data.Datatable.DeleteRow("DTData",V.DataView.DTData!DVImport1(V.Args.RowIndex).DataTableIndex)
+	F.Data.Datatable.AcceptChanges("DTData")
+	v.Global.bSave.Set(true)
+f.Intrinsic.Control.elseIf(V.Args.column.UCase,=,"CUSTOMER_BROWSE")
+	
+	V.Local.sSQL.Set("select customer,Name_customer from v_customer_master")
+	F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+	F.Intrinsic.UI.Browser("CUSTOMER BROWSE","conx",V.Local.sSQL,"Customer*!*Name_customer","30*!*70",V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		f.Intrinsic.Control.If(v.Args.RowIndex,=,-1)
+			F.Data.DataTable.SetValue("DTData",v.DataTable.DTData.RowCount--,"customer",V.Local.sRet(0).Trim)
+			F.Data.DataTable.SetValue("DTData",v.DataTable.DTData.RowCount--,"MODIFIED_USER",v.Caller.User)
+			F.Data.DataTable.SetValue("DTData",v.DataTable.DTData.RowCount--,"MODIFIED_DATETIME",v.Ambient.Now)
+			gui.frmSerial.GsGridSerial.FocusCell("GridView",v.DataTable.DTData.RowCount--,1)
+		f.Intrinsic.Control.Else
+			F.Data.DataTable.SetValue("DTData",V.DataView.DTData!DVImport1(V.Args.RowIndex).DataTableIndex,"customer",V.Local.sRet(0).Trim)
+			F.Data.DataTable.SetValue("DTData",V.DataView.DTData!DVImport1(V.Args.RowIndex).DataTableIndex,"MODIFIED_USER",v.Caller.User)
+			F.Data.DataTable.SetValue("DTData",V.DataView.DTData!DVImport1(V.Args.RowIndex).DataTableIndex,"MODIFIED_DATETIME",v.Ambient.Now)
+			gui.frmSerial.GsGridSerial.FocusCell("GridView",V.DataView.DTData!DVImport1(V.Args.RowIndex).DataTableIndex,3)
+		Function.Intrinsic.Control.EndIf
+		v.Global.bSave.Set(true)
+	Function.Intrinsic.Control.EndIf
+Function.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.UnBlockEvents 
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.UnBlockEvents 
+		f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+		F.Intrinsic.UI.CloseWaitDialog
+	f.Intrinsic.Control.EndTry
+
+Program.Sub.GsGridSerial_RowCellClick.End
+
+Program.Sub.Load_GridMaint.Start
+f.Intrinsic.Control.Try
+
+v.Local.iTotClmn.Declare
+v.Local.stitle.Declare
+v.Local.i.Declare
+V.Local.sRet.Declare
+V.Local.bEditGrp.Declare
+
+F.ODBC.Connection!conx.OpenCompanyConnection(300)
+f.Intrinsic.Control.CallSub(CheckTable)
+
+F.Intrinsic.UI.InvokeWaitDialog("Loading...","Please Wait...")
+
+f.Data.Datatable.CreateFromSQL("DTData","conx","select CUSTOMER,ALPHA_NUMERIC,USE_PART,PREFIX,SUFFIX,OMIT_CHARS,LCOUNT,HIDDEN,MAX_COUNT,MAX_COUNT_LENGTH,ADDED_USER,ADDED_DATETIME,MODIFIED_USER,MODIFIED_DATETIME from GCG_6009_Serial order by CUSTOMER","True")
+
+F.Data.DataView.Create("DTData","DVImport1",22,"","")
+
+F.Data.DataTable.AddColumn("DTData","Customer_Browse","string","^")
+F.Data.DataTable.AddColumn("DTData","Delete_Row","string")
+
+f.Data.DataTable.AddRow("DTData","CUSTOMER","","ALPHA_NUMERIC",0,"USE_PART",0,"PREFIX","","SUFFIX","","OMIT_CHARS","","LCOUNT",0,"HIDDEN",0,"MAX_COUNT",0,"MAX_COUNT_LENGTH",0,"ADDED_USER",v.Caller.User,"MODIFIED_USER",v.Caller.User,"ADDED_DATETIME",v.Ambient.Now,"MODIFIED_DATETIME",v.Ambient.Now)
+
+
+gui.frmSerial.GsGridSerial.AddGridViewFromDataView("GridView","DTData","DVImport1")
+gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","AllowAddRows",True)
+gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","AllowDeleteRows",True)
+
+
+'Check User Permissions
+F.Global.Security.IsInGroup(v.Caller.User,"SERGRP",V.Local.bEditGrp)
+F.Intrinsic.Control.If(v.Local.bEditGrp,=,True)
+	gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","Editable",true)
+	gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","ReadOnly",false)
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","VisibleIndex",1)
+f.Intrinsic.Control.Else
+	gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","Editable",False)
+	gui.frmSerial.GsGridSerial.SetGridviewProperty("GridView","ReadOnly",true)
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","DELETE_ROW","visible","false")
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","visible","false")
+	gui.frmSerial.cmdSave.Enabled(false)
+F.Intrinsic.Control.EndIf
+
+gui.frmSerial.GsGridSerial.SetGridViewProperty("Gridview", "AllowSort",False)
+
+gui.frmSerial.GsGridSerial.GetColumnCount("GridView",v.Local.iTotClmn)
+f.Intrinsic.Math.Sub(v.Local.iTotClmn,1,v.Local.iTotClmn)
+f.Intrinsic.Control.For(v.Local.i,0,v.Local.iTotClmn,1)
+	gui.frmSerial.GsGridSerial.GetColumnNamebyIndex("GridView",v.Local.i,v.Local.stitle)
+'	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"AllowEdit",False)
+'	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"ReadOnly",True)
+
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"HeaderFontBold","True")
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"HeaderBackColor",V.Enum.ThemeColors!ThemeColorDark)
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"HeaderForeColor",V.Enum.ThemeColors!TextOnThemeColor)
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"HeaderHAlignment","Center")
+	gui.frmSerial.GsGridSerial.SetColumnProperty("GridView",v.Local.stitle,"HeaderWordWrap","wrap")
+f.Intrinsic.Control.Next(v.Local.i)
+
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","ReadOnly",True)
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","AllowEdit",False)
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","CellBackColor", "#A9A9A9")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","CellFontBold",True)
+'gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","VisibleIndex",1)
+
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Delete_Row","Caption"," ")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","Caption"," ")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","CellHAlignment","Center")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Customer_Browse","MaxWidth","30")
+
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","ADDED_USER","visible","false")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","MODIFIED_USER","visible","false")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","MAX_COUNT","visible","false")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","MODIFIED_DATETIME","visible","false")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","ADDED_DATETIME","visible","false")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","ALPHA_NUMERIC","Caption","ALPHA NUMERIC")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","USE_PART","Caption","USE PART")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","OMIT_CHARS","Caption","OMIT CHARS")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","MAX_COUNT_LENGTH","Caption","MAX COUNTLENGTH")
+
+gui.frmSerial.GsGridSerial.ColumnEdit("GridView","Delete_Row","EditorButton","Delete")
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Delete_Row","HeaderForeColor",V.Enum.ThemeColors!TextOnThemeColor)
+
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Delete_Row","ReadOnly",True)
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Delete_Row","AllowEdit",False)
+gui.frmSerial.GsGridSerial.SetColumnProperty("GridView","Delete_Row","MaxWidth","70")
+
+
+gui.frmSerial.GsGridSerial.SetGridViewProperty("GridView", "OptionsSelectionEnableAppearanceFocusedRow", "False") 
+
+gui.frmSerial.GsGridSerial.MainView("GridView")
+
+F.Intrinsic.UI.CloseWaitDialog
+
+f.Intrinsic.Control.Catch
+		f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+		F.Intrinsic.UI.CloseWaitDialog
+	f.Intrinsic.Control.EndTry
+
+
+Program.Sub.Load_GridMaint.End
+
+Program.Sub.ErrorMsg.Start
+v.Local.sError.Declare
+f.Intrinsic.String.Build("Project GCG_6011_SalesTeam.g2u {0}{0}Subroutine: {1}{0}Error: {2} with Description: {3}", v.Ambient.NewLine, v.Args.CurrentSub, v.Ambient.ErrorNumber, v.Ambient.ErrorDescription, v.Local.sError)
+f.Intrinsic.UI.Msgbox(v.Local.sError)
+
+Program.Sub.ErrorMsg.End
+Program.Sub.genSeq.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+v.Local.sArray.Declare
+v.Local.iElement.Declare(Long,-1)
+v.Local.iCount.Declare(Long,0)
+v.Local.sDigits.Declare(String,"")
+v.Local.sSerial.Declare(String,"")
+v.Local.iPos.Declare
+v.Local.bNumber.Declare
+v.Local.sNumberDigits.Declare(Long,-1)
+v.Local.sAlpaDigits.Declare
+v.Local.sMaxValue.Declare
+v.Local.sDcValue.Declare
+v.Local.iDcValue.Declare
+v.Local.sMaxBase.Declare
+v.Local.sRet.Declare
+
+'this first if statement addresses hitting the max numerical value based on the length of digits (3 = 999)
+
+F.Intrinsic.Control.If(v.Args.MAX,=,"True")
+	'when we excede the numeric max value, we only need the left number to turn in to a character
+	f.Intrinsic.String.Left(v.Args.CURRENT_SERIAL,1,v.Local.sDcValue)
+	F.Data.Dictionary.ReturnKeyFromValue("dcBase",v.Local.sDcValue,v.Local.iPos)
+	f.Intrinsic.Math.Add(v.Local.iPos,1,v.Local.iPos)
+	f.Intrinsic.Control.If(v.dictionary.dcBase![v.Local.iPos],<>,"***NORETURN***")
+		f.Intrinsic.String.Mid(v.Args.CURRENT_SERIAL,2,V.Local.sDcValue)
+		f.Intrinsic.Math.Add(v.Local.sDcValue.Long,2,v.Local.sDigits)
+		f.Intrinsic.Control.If(v.Local.sDigits.Length,>,v.Local.sDcValue.Length)	
+			f.Intrinsic.String.Mid(v.Local.sDigits,2,v.local.sDigits)
+		F.Intrinsic.Control.EndIf
+		f.Intrinsic.String.Build("{0}{1}",v.dictionary.dcBase![v.Local.iPos],v.Local.sDigits,v.Local.sSerial)		
+	f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Else
+	F.Intrinsic.String.LimitSplit(V.Args.CURRENT_SERIAL.Trim,1,v.Local.sArray)
+	'now we're going to figure out which digits are numeric and which ones aren't
+	f.Intrinsic.Control.For(v.Local.iCount,0,v.Local.sArray.UBound,1)
+		f.Intrinsic.Math.IsNumeric(v.Local.sArray(v.Local.iCount),v.Local.bNumber)
+		f.Intrinsic.Control.If(v.Local.bNumber)
+			'if the digit is a number, concat them together to make a numeric value out of the digits within the string concat('9','8','98')  A95  
+			f.Intrinsic.String.build("{0}{1}",v.Local.sDcValue,v.Local.sArray(v.Local.iCount),v.Local.sDcValue)
+			'at the same time we are determining the current value of numeric digits, we can determine the max value of remaining numeric digits.
+			'example:  if the max length of the serial is 5, then the normal max value is 99999.  However, if the first 2 digits are alpha AB123, then our max value is now 999
+				'this tells us how to increment which digits.
+			f.Intrinsic.String.build("{0}{1}",v.Local.sMaxValue,"9",v.Local.sMaxValue)
+		f.Intrinsic.Control.Else
+			'if the digit is not numeric we can use a number value to determine which elements in the sDigits array need to be concatenated later for the new serial, and also which single element needs to be increment alphabetically.
+			'iSum starts at -1 so the ending value will equal the array element that needs to be increment first, IF we have to increment it.
+			f.Intrinsic.Math.Add(v.Local.iElement,1,v.Local.iElement)
+			f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sArray(v.Local.iCount),v.Local.sAlpaDigits)
+			f.Intrinsic.Debug.SetLA("we are checking to see if the elements are text or numeric")
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Next(v.Local.iCount)
+
+	
+	
+	
+	'if the numeric value of our serial is <= maxvalue as determined above by digits, then we're ok to combine the string and the numbers to a new serial  "Y999", YA01
+	f.Intrinsic.Control.If(v.Local.sDcValue.Length,>,0)
+		f.Intrinsic.Control.AndIf(v.Local.sDcValue.Long,<,v.Local.sMaxValue)
+			f.Intrinsic.Math.Add(v.Local.sDcValue.Long,1,v.Local.iDcValue)
+			F.Intrinsic.String.LPad(V.Local.iDcValue,"0",v.Local.sDcValue.Length,v.Local.sDcValue)
+			f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sDcValue,v.Local.sSerial)
+		f.Intrinsic.Control.Else
+	'999
+		'our max value has hit it's 9's limit, so add 2.
+		f.Intrinsic.Math.Add(v.Local.sDcValue.Long,2,v.Local.sDcValue)
+		f.Intrinsic.String.mid(v.Local.sDcValue,2,v.Local.sDcValue)
+		'get the max alpha character allowed for a single digit
+		f.Data.DataTable.Compute("dtBase","MAX(VALUE)","",V.Local.sMaxBase)
+		'if the current value of this alpha digit is not equal to the MaxBase, then we can just get the next value in line.
+		
+		
+		F.Intrinsic.Control.If(V.Local.sArray(v.Local.iElement),<>,v.Local.sMaxBase)
+			'we are changing alpha digits so we have to reset the variable
+			v.Local.sAlpaDigits.Set("")
+			f.Data.Dictionary.ReturnKeyFromValue("dcBase",v.Local.sArray(v.Local.iElement),v.Local.iPos)
+			f.Intrinsic.Math.Add(v.Local.iPos,1,v.Local.iPos)
+			v.Local.sArray(v.Local.iElement).Set(v.dictionary.DcBase![v.Local.iPos])
+			f.Intrinsic.Control.For(v.Local.iPos,0,v.Local.iElement,1)
+				f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sArray(v.Local.iPos),v.Local.sAlpaDigits)
+			f.Intrinsic.Control.Next(v.Local.iPos)
+			f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sDcValue,v.Local.sSerial)
+		f.Intrinsic.Control.Else
+			
+			v.Local.sAlpaDigits.Set("")
+			f.Intrinsic.Math.Add(v.Local.iElement,1,v.Local.iElement)
+			f.Intrinsic.Control.If(v.Local.iElement,>,v.Local.sArray.UBound)
+				f.Intrinsic.String.LPad("1","0",v.Global.iMaxLength,v.Local.sMaxBase)
+				f.Intrinsic.String.Build("0{0}",v.Local.sMaxBase,v.Local.sSerial)
+'				f.Intrinsic.String.Build("current serial number has reached it's max value {0}{1}Start over at {2} ? = Yes{1}Increase the length and start at{3} ? = No",v.Args.CURRENT_SERIAL,V.Ambient.NewLine,v.Local.sMaxBase,v.Local.sSerial,V.Local.sError)
+
+'				f.Intrinsic.Control.CallSub(StartOver,"MESSAGE",V.Local.sError)
+				f.Intrinsic.String.Build("current serial number has reached it's max value {0}, Increase the length and start",v.Args.CURRENT_SERIAL,V.Local.sError)
+				f.Intrinsic.UI.Msgbox(V.Local.sError)
+				f.Intrinsic.Control.CallSub(frmGenSerial_UnLoad)
+			F.Intrinsic.Control.Else
+'			f.Intrinsic.Control.If(v.Local.bNumber)
+				F.Intrinsic.Control.If(V.Local.sArray(V.Local.iElement),=,"9")
+					F.Data.Dictionary.ReturnKeyFromValue("dcBase",v.Local.sArray(v.Local.iElement),v.Local.iPos)
+					f.Intrinsic.Math.Add(v.Local.iPos,1,v.Local.iPos)
+					v.Local.sArray(v.Local.iElement).Set(v.dictionary.DcBase![v.Local.iPos])
+					f.Intrinsic.Control.For(v.Local.iPos,0,v.Local.iElement,1)
+						f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sArray(v.Local.iPos),v.Local.sAlpaDigits)
+					f.Intrinsic.Control.Next(v.Local.iPos)
+					'trim off the left most numeric value because it's getting replaced with an alpha character.
+					f.Intrinsic.String.mid(v.Local.sDcValue,2,v.Local.sDcValue)
+					f.Intrinsic.String.Build("{0}{1}",v.Local.sAlpaDigits,v.Local.sDcValue,v.Local.sSerial)
+				f.Intrinsic.Control.EndIf
+			f.Intrinsic.Control.EndIf
+				
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Variable.AddRV("NEW_SERIAL",V.Local.sSerial)
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry	
+Program.Sub.genSeq.End
+
+Program.Sub.gen_serial2.Start
+Program.Sub.gen_serial2.End
+
+Program.Sub.New_SerialGEN.Start
+F.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+V.Local.sRet.Declare
+v.Local.sValue.Declare
+v.Local.bNumber.Declare
+v.Local.iOrderQty.Declare(Long)  'needs to be set from passed vars
+v.Local.iQty.Declare
+v.Local.iCount.Declare
+v.Local.iPositions.Declare
+v.Local.bPart.Declare
+V.Local.sExcludes.Declare
+V.Local.sFilter.Declare
+v.Local.iHndl.Declare
+v.Local.sRetVal.Declare
+v.Local.sSerial.Declare
+v.Local.ssql.Declare
+v.Local.sPartExist.Declare
+v.Local.bRet.Declare
+v.Local.sBASE36.Declare
+
+f.Intrinsic.UI.InvokeWaitDialog("Building serials....")
+'these two variables should retain their value throughout, so make them global vars.
+v.global.iMaxLength.Declare
+v.Global.sMaxValue.Declare(String,"")
+
+'F.Data.DataTable.CreateFromXML("dtBase","C:\temp\BASE36.XML",True)
+
+f.Intrinsic.String.Build("{0}\Custom\6009\BASE36.XML",v.Caller.GlobalDir,v.Local.sBASE36)
+F.Data.DataTable.CreateFromXML("dtBase",v.Local.sBASE36,True)
+
+'query the table for the last value, max value, AND excludes and return that to sRet
+
+'for this i will just set sRet to a value of my choosing.
+'v.Local.sRet.Set("A01*!*3*!*I,C,Z")
+
+'RUNQTY
+v.Local.iOrderQty.set(v.Passed.000026) 
+f.Intrinsic.String.Build("{0}*!*{1}*!*{2}",v.Args.LCOUNT,v.Args.MAX_COUNT_LENGTH,v.Args.OMIT_CHARS,v.Local.sRet)
+
+'split the sRet return in to 3 values.  The last value sArray, iMax, and sExclude.
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+V.Local.sValue.Set(V.Local.sRet(0))
+v.global.iMaxLength.Set(v.Local.sRet(1).LONG)
+V.Local.sExcludes.Set(v.Local.sRet(2))
+'now let's split the excludes and removes those from our base table so we can create a dictionary of values.
+f.Intrinsic.Control.If(V.Local.sExcludes.Length,=>,1)
+	f.Intrinsic.String.Split(V.Local.sExcludes,",",V.Local.sExcludes)
+	f.Intrinsic.Control.For(v.Local.iCount,0,v.Local.sExcludes.UBound,1)
+		f.Intrinsic.String.Build("VALUE = '{0}'",V.Local.sExcludes(V.Local.iCount),V.Local.sFilter)
+		f.Data.DataTable.Select("dtBase",V.Local.sFilter,V.Local.iPositions)
+		F.Data.DataTable.DeleteRow("dtBase",V.Local.iPositions)
+	F.Intrinsic.Control.Next(V.Local.iCount)
+	F.Data.DataTable.AcceptChanges("dtBase")
+	f.Data.DataTable.SetSeries("dtBase","KEY",0,1)
+f.Intrinsic.Control.EndIf
+'we've removed the exlcudes, create a dictionary to use for incrementing next values
+F.Data.Dictionary.CreateFromDataTable("dcBase","dtBase","KEY","VALUE")
+
+'before we get in to the loop, let's determine what our "Max Value" actually is based on the MaxLength of the serial number.
+'now we have to see what the max value can be based on the number of digits, example:  if it's stored as a 3, then we allow 3 digits.  that means the max value is 999 or ( '9' & '9' & '9')
+'f.Intrinsic.Control.For(v.Local.iPositions,1,v.global.iMaxLength,1)
+'	F.Intrinsic.String.Concat(V.Global.sMaxValue,"9",v.Global.sMaxValue)
+'F.Intrinsic.Control.Next(V.Local.iPositions)
+
+f.Intrinsic.String.RPad(v.Global.sMaxValue,"9",v.Global.iMaxLength,v.Global.sMaxValue)
+
+'next we can validate that we have the right number of characters in our array by checking the ubound count against the (iMax - 1)
+'f.Intrinsic.Control.If(v.global.iMaxLength,<>,v.Global.sMaxValue.Length)
+'	f.Intrinsic.UI.Msgbox("Houston, we have a problem")
+'f.Intrinsic.Control.EndIf
+
+'Loads name of BDF and ID into memory
+	Function.Intrinsic.BDF.Load("AUX001","AUX001")
+'now let's loop through the order quantity and start building our serial numbers
+	
+f.Intrinsic.Control.If(v.Args.USE_PART)
+	
+	'For Parts ignore Lcount, increment serialno by 1 for that part
+	f.Intrinsic.Control.CallSub(GetNextSerialNo_Parts,"PartFromWorkOrder",v.Args.PartFromWorkOrder,"PREFIX",V.Args.PREFIX)
+	V.Local.sValue.Set(v.Args.NXT_SERIAL)
+'	Function.Intrinsic.Debug.InvokeDebugger
+'	Function.Intrinsic.Debug.Stop
+	
+	'check for duplicate serialno for this part ,Variable.Passed.009000,Variable.Passed.009001
+	'
+'	f.Intrinsic.String.Build("select distinct SERIAL_START from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{0}' and SERIAL_START <> ''",v.Args.PartFromWorkOrder,v.Local.ssql)
+'	f.Intrinsic.String.Build("select distinct SERIAL_START from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{0}' and SERIAL_START <> '' and left(SERIAL_START,6) = '{1}'",v.Args.PartFromWorkOrder,V.Args.PREFIX,v.Local.ssql)
+f.Intrinsic.String.Build("select distinct SERIAL_START from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{0}' and SERIAL_START <> '' and left(SERIAL_START,{2}) = '{1}'",v.Args.PartFromWorkOrder,V.Args.PREFIX,V.Args.PREFIX.Length,v.Local.ssql)
+
+	f.ODBC.Connection!conx.executeandreturn(v.Local.ssql,v.Local.sPartExist)
+f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.For(v.Local.iQty,1,v.Local.iOrderQty,1)
+	f.Intrinsic.UI.ChangeWaitStatus("Building Serials...",v.Local.iQty,0,v.Local.iOrderQty)
+	'first, let's check to see if v.local.sValue is a number
+	f.Intrinsic.Math.IsNumeric(v.Local.sValue,v.Local.bNumber)
+	f.Intrinsic.Control.If(v.Local.bNumber)
+		'true, it's a number, that means we have no alpha characters yet
+		'compare the current value to the global max valueR		
+		f.Intrinsic.Control.If(v.Local.sValue.Long,<,v.Global.sMaxValue.Long)
+			f.Intrinsic.Math.Add(v.Local.sValue,1,v.Local.sValue)
+			f.Intrinsic.String.LPad(v.Local.sValue,"0",v.Global.iMaxLength,v.Local.sValue)
+		f.Intrinsic.Control.Else
+			'we've hit a max value based on our max length
+			f.Intrinsic.Control.CallSub(genSeq,"CURRENT_SERIAL",V.Local.sValue,"MAX","True")
+			'we should have our returned serial fragment back, so lets first update sValue with this new value
+			v.Local.sValue.Set(v.Args.NEW_SERIAL)
+		f.Intrinsic.Control.EndIf		
+	F.Intrinsic.Control.Else
+		'it's not a number so we have alpha characters already
+		F.Intrinsic.Control.CallSub(genSeq,"CURRENT_SERIAL",V.Local.sValue,"MAX","False")
+		'we should have our returned serial fragment back, so lets first update sValue with this new value
+		v.Local.sValue.Set(v.Args.NEW_SERIAL)
+	F.Intrinsic.Control.EndIf
+
+	'so now we build the entire serial number out of fragments based on using the part number or not.
+	'are we using the part number?
+	
+'	f.Intrinsic.Control.If(V.Args.PREFIX,=,"MMYY")
+'		F.Intrinsic.String.Build("{0}{1}{2}",v.Ambient.Date.FormatMMYY,v.Local.sValue,v.Args.SUFFIX,v.Local.sSerial)
+'	f.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}{1}{2}",V.Args.PREFIX,v.Local.sValue,v.Args.SUFFIX,v.Local.sSerial)
+'	f.Intrinsic.Control.EndIf	
+	
+	Function.Intrinsic.Debug.Stop
+	
+	f.Intrinsic.Control.If(v.Args.USE_PART)
+'		'f.Intrinsic.String.Build("{0}{1}{2}{3}",v.Args.PREFIX,v.Args.PartFromWorkOrder,v.Args.SUFFIX,v.Local.sValue,v.Local.sSerial)
+'		'check for duplicate serialno for this part
+
+		f.Intrinsic.String.IsInString(v.Local.sPartExist,v.Local.sSerial,True,v.Local.bRet)
+		f.Intrinsic.Control.If(v.Local.bRet)
+			'serialno already exist for the part so skip SerialNo
+			f.Intrinsic.Math.Add(v.Local.iOrderQty,1,v.Local.iOrderQty)
+		f.Intrinsic.Control.Else
+			f.Intrinsic.String.Build("{0}{1}{2}",v.Local.sRetVal,v.Local.sSerial,v.Ambient.NewLine,v.Local.sRetVal)
+			'code to add it to the BDF
+			Function.Intrinsic.BDF.WriteRow("AUX001",v.Local.sSerial)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Else
+		f.Intrinsic.String.Build("{0}{1}{2}",v.Local.sRetVal,v.Local.sSerial,v.Ambient.NewLine,v.Local.sRetVal)
+		'code to add it to the BDF
+		Function.Intrinsic.BDF.WriteRow("AUX001",v.Local.sSerial)
+	f.Intrinsic.Control.EndIf
+
+	'add this serial number to the BDF then loop to the next one.
+	'FOR TESTING PURPOSES I'M ADDING JUST THE FRAGMENT TO A DATATABLE SO WE CAN SEE AND TEST ALL THE POSSIBLE COMBINATIONS
+	
+		
+f.Intrinsic.Control.Next(v.Local.iQty)
+Function.Intrinsic.BDF.Save("AUX001","AUX001")
+v.Passed.000027.Set(v.Passed.000026)
+
+f.Intrinsic.String.Build("UPDATE GCG_6009_Serial set LCOUNT_TEMP = '{0}' where Customer = '{1}'",v.Local.sValue,v.Screen.frmGenSerial!txtCustomer.text,v.Local.ssql)
+f.ODBC.Connection!conx.execute(v.Local.ssql)		
+v.Passed.Global.Set(v.Screen.frmGenSerial!txtCustomer.text)
+'f.Intrinsic.File.String2File("c:\temp\ran.txt",v.Local.sRetVal)
+f.Intrinsic.UI.CloseWaitDialog
+f.Intrinsic.UI.Msgbox("completed")
+
+'lock the textboxes and grid
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000082,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000022,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000023,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000024,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000025,"LOCK","1")	
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.AUX001,"LOCK","1")	
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000030,"LOCK","1")		
+	
+f.Intrinsic.Control.CallSub(frmGenSerial_UnLoad)
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.CloseWaitDialog
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+Program.Sub.New_SerialGEN.End
+Program.Sub.frmGenSerial_UnLoad.Start
+f.Intrinsic.Control.If(V.ODBC.conx.State,=,1)
+	f.ODBC.Connection!conx.Close
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.End
+Program.Sub.frmGenSerial_UnLoad.End
+
+Program.Sub.cmdGenerate_Click.Start
+f.Intrinsic.Control.Try
+
+V.Local.sSQL.Declare
+v.Local.lMAX_COUNT_LENGTH.Declare
+V.Local.lRet.Declare
+V.Local.sError.Declare
+'Function.Intrinsic.Debug.InvokeDebugger
+'Function.Intrinsic.Debug.Stop
+
+f.Intrinsic.Control.If(v.Screen.frmGenSerial!txtCustomer.Text,=,"")
+	f.Intrinsic.UI.Msgbox("Please select customer")
+	gui.frmGenSerial.txtCustomer.SetFocus
+	f.Intrinsic.Control.ExitSub
+f.Intrinsic.Control.EndIf
+
+
+'f.Intrinsic.String.Build("select USE_PART,prefix,suffix,omit_chars,LCount,Max_count_Length,alpha_Numeric from GCG_6009_Serial where Customer = '{0}' and Hidden = 0",v.Screen.frmGenSerial!txtCustomer.Text,V.Local.sSQL)
+f.Intrinsic.String.Build("select USE_PART,prefix,suffix,omit_chars,LCount,CASE WHEN Max_count_Length IS NULL THEN 0 else Max_count_Length  END AS Max_count_Length,alpha_Numeric from GCG_6009_Serial where Customer = '{0}' and Hidden = 0",v.Screen.frmGenSerial!txtCustomer.Text,V.Local.sSQL)
+
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rst",V.Local.ssql)
+
+f.Intrinsic.Control.If(v.ODBC.conx!rst.EOF,=,False)
+	f.Intrinsic.Control.If(v.ODBC.conx!rst.FieldVal!ALPHA_NUMERIC,=,0)
+	
+		f.Intrinsic.Control.If(v.ODBC.conx!rst.FieldVal!MAX_COUNT_LENGTH,>,0)
+			v.Local.lMAX_COUNT_LENGTH.Set(v.ODBC.conx!rst.FieldValTrim!MAX_COUNT_LENGTH)
+			f.Intrinsic.Math.Add(v.ODBC.conx!rst.FieldValTrim!LCOUNT,v.Screen.frmGenSerial!txtWOQTY.Text,V.Local.lRet)
+			f.Intrinsic.Control.If(V.Local.lRet.Length,>,v.Local.lMAX_COUNT_LENGTH)
+				f.Intrinsic.String.Build("current serial number has reached it's max value, Increase the length and start","",V.Local.sError)
+				f.Intrinsic.UI.Msgbox(V.Local.sError)
+				f.Intrinsic.Control.CallSub(frmGenSerial_UnLoad)
+			f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.Else
+			f.Intrinsic.Math.Add(v.ODBC.conx!rst.FieldValTrim!LCOUNT,v.Screen.frmGenSerial!txtWOQTY.Text,V.Local.lRet)
+			v.Local.lMAX_COUNT_LENGTH.Set(V.Local.lRet.Length)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Else
+		f.Intrinsic.Control.If(v.ODBC.conx!rst.FieldVal!MAX_COUNT_LENGTH,>,0)
+			v.Local.lMAX_COUNT_LENGTH.Set(v.ODBC.conx!rst.FieldVal!MAX_COUNT_LENGTH)
+		f.Intrinsic.Control.Else
+			f.Intrinsic.Math.Add(v.ODBC.conx!rst.FieldValTrim!LCOUNT,v.Screen.frmGenSerial!txtWOQTY.Text,V.Local.lRet)
+			v.Local.lMAX_COUNT_LENGTH.Set(V.Local.lRet.Length)
+		f.Intrinsic.Control.EndIf	
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.CallSub(New_SerialGEN,"USE_PART",v.ODBC.conx!rst.FieldVal!USE_PART,"PREFIX",v.ODBC.conx!rst.FieldValTrim!PREFIX,"SUFFIX",v.ODBC.conx!rst.FieldValTrim!SUFFIX,"OMIT_CHARS",v.ODBC.conx!rst.FieldValTrim!OMIT_CHARS,"LCOUNT",v.ODBC.conx!rst.FieldValTrim!LCOUNT,"MAX_COUNT_LENGTH",v.Local.lMAX_COUNT_LENGTH,"PartFromWorkOrder",V.Global.sPart)
+f.Intrinsic.Control.Else
+	f.Intrinsic.UI.Msgbox("Customer Serial Generation Data not found")
+f.Intrinsic.Control.endif
+f.ODBC.conx!rst.Close
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+'f.Intrinsic.Control.EndTry
+Program.Sub.cmdGenerate_Click.End
+
+Program.Sub.cmdCustBrow_Click.Start
+f.Intrinsic.Control.Try
+
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+
+
+V.Local.sSQL.Set("select S.customer,M.Name_customer from  GCG_6009_Serial S left join v_customer_master M  on M.customer = S.customer where Hidden = 0")
+	F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+	F.Intrinsic.UI.Browser("Customer","conx",V.Local.sSQL,"Customer*!*Name_customer","30*!*70",V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		gui.frmGenSerial.txtCustomer.Text(V.Local.sRet(0).Trim)
+		
+		v.Global.bSave.Set(true)
+	Function.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.UnBlockEvents 
+		f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdCustBrow_Click.End
+
+Program.Sub.LoadSerial_Data.Start
+f.Intrinsic.Control.Try
+V.Local.sSQL.Declare
+V.Global.sPart.Declare
+v.Local.sret.Declare
+
+
+f.Intrinsic.Control.If(v.Passed.000027,<>,"")
+	'inform the user serial numbers have already been created
+	F.Intrinsic.UI.Msgbox("Serial numbers cannot be created as serial numbers have either already been generated or created manually")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000082,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000022,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000023,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000024,"LOCK","1")
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000025,"LOCK","1")	
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.AUX001,"LOCK","1")	
+	f.Intrinsic.UI.ChangeCallerProperty(v.Passed.000030,"LOCK","1")					
+	f.Intrinsic.Control.ExitSub
+f.Intrinsic.Control.EndIf
+'query to see if the company option to attach manual serial numbers is turned on, if it is not, end the program.
+
+f.Intrinsic.String.Build("select F_BOOLEAN from V_OP_HEADER where ID = '{0}'","401137",v.Local.ssql)
+f.ODBC.Connection!conx.executeandreturn(v.Local.ssql,v.Local.sret)
+f.Intrinsic.Control.If(v.Local.sret.Trim,=,"0")
+	F.Intrinsic.UI.Msgbox("The company option to allow manual serial numbers is not activated.")
+	f.Intrinsic.Control.CallSub(frmGenSerial_UnLoad)
+f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.String.Build("select part,Customer from  v_job_header where job = '{0}' and suffix = '{1}'",Variable.Passed.009000,Variable.Passed.009001,V.Local.sSQL)
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rst",V.Local.ssql)
+f.Intrinsic.Control.If(v.ODBC.conx!rst.EOF,=,False)
+	gui.frmGenSerial.txtCustomer.Text(v.ODBC.conx!rst.FieldValtrim!Customer)
+	V.Global.sPart.set(v.ODBC.conx!rst.FieldValtrim!part)
+	gui.frmGenSerial.txtWOQTY.text(v.Passed.000026)
+f.Intrinsic.Control.EndIf
+f.ODBC.conx!rst.Close
+
+gui.frmGenSerial..Show
+f.Intrinsic.Control.Catch
+		f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+Program.Sub.LoadSerial_Data.End
+
+Program.Sub.Print_Serial.Start
+V.local.iBiRunID.Declare(long)
+V.local.iBILogID.Declare(long)
+V.Local.sRet.Declare(String)
+V.Local.sParams.Declare(String)
+V.Local.sValues.Declare(String)
+V.Local.iRptid.Declare
+V.Local.iRet.Declare
+V.Local.sWO.Declare
+V.Local.sSuffix.Declare
+
+
+F.Global.BI.GetRunID(V.local.iBIRunID)
+F.Global.BI.GetIDFromName("GCG_6009_GenSerial.rpt",V.Local.iRptid)
+F.Global.BI.StartLogging(V.Local.iBIRunID,V.Local.iRptid,0,"",V.Local.iBILogID)
+F.Global.BI.StopLogging(V.Local.iBILogID)
+
+V.Local.sParams.Set("WO*!*SUFFIX")
+
+f.Intrinsic.String.Build("{0}*!*{1}",v.Args.WO,v.Args.SUFFIX,V.Local.sValues)
+
+F.Global.BI.RunReportPreProcessor(V.local.iBiRunID,V.local.iBILogID,V.Local.sParams,V.Local.sValues,"",-1,True,"",-1,"",0,"","",V.Local.iRet)
+Program.Sub.Print_Serial.End
+Program.Sub.JOB_Browser.Start
+f.Intrinsic.Control.Try
+
+v.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+Function.Intrinsic.UI.SetBrowserOOT(True)
+	
+f.Intrinsic.UI.Browser("1000","",v.Local.sRet)
+
+f.Intrinsic.Control.If(v.Local.sRet,<>,"***CANCEL***")
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	f.Intrinsic.Control.CallSub(Print_Serial,"WO",v.Local.sRet(0).trim,"SUFFIX",v.Local.sRet(1).trim)
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)
+f.Intrinsic.Control.EndTry
+Program.Sub.JOB_Browser.End
+
+Program.Sub.CheckTable.Start
+f.Intrinsic.Control.Try
+
+V.Local.bExists.Declare
+
+V.Local.sSQL.Declare
+
+
+F.ODBC.Connection!conx.TableExists("GCG_6009_Serial",V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists,=,False)
+	V.Local.sSQL.Set("CREATE TABLE GCG_6009_Serial(CUSTOMER CHAR(6) NOT NULL,ALPHA_NUMERIC BIT DEFAULT '0' NOT NULL,USE_PART BIT DEFAULT '0' NOT NULL,PREFIX VARCHAR(30),SUFFIX VARCHAR(30),OMIT_CHARS VARCHAR(30),LCOUNT VARCHAR(30),HIDDEN BIT DEFAULT '0' NOT NULL,MAX_COUNT BIT DEFAULT '0' NOT NULL,MAX_COUNT_LENGTH INTEGER DEFAULT '0',ADDED_DATETIME DATETIME,ADDED_USER VARCHAR(8),MODIFIED_DATETIME TIMESTAMP,MODIFIED_USER VARCHAR(8),LCOUNT_TEMP VARCHAR(30))")
+	F.ODBC.Connection!conx.Execute(V.Local.sSQL)
+
+	F.ODBC.Connection!conx.Execute("CREATE UNIQUE INDEX GCG_6009_Serial_Indx USING 1 ON GCG_6009_Serial(CUSTOMER)")
+
+F.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)	
+f.Intrinsic.Control.EndTry
+Program.Sub.CheckTable.End
+
+Program.Sub.GetNextSerialNo_Parts.Start
+f.Intrinsic.Control.Try
+V.Local.sSQL.Declare
+V.Local.lPrefixLen.Declare
+'Function.Intrinsic.Debug.InvokeDebugger
+'Function.Intrinsic.Debug.Stop
+
+	f.Intrinsic.Math.Add(V.Args.PREFIX.Length,1,V.Local.lPrefixLen)
+
+'	f.Intrinsic.String.Build("select distinct s.job,s.suffix,substring(SERIAL_START,{0},length(SERIAL_START)) as NXTNo from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{1}' and SERIAL_START <> ''",V.Local.lPrefixLen,v.Args.PartFromWorkOrder,v.Local.ssql)
+'	f.Intrinsic.String.Build("select distinct s.job,s.suffix,substring(SERIAL_START,{0},length(SERIAL_START)) as NXTNo from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{1}' and SERIAL_START <> '' and left(SERIAL_START,6) = '{2}' ",V.Local.lPrefixLen,v.Args.PartFromWorkOrder,V.Args.PREFIX,v.Local.ssql)
+f.Intrinsic.String.Build("select distinct s.job,s.suffix,substring(SERIAL_START,{0},length(SERIAL_START)) as NXTNo from v_job_Header H join  JOB_Serial S on S.job = H.job and S.suffix = H.suffix where h.part= '{1}' and SERIAL_START <> '' and left(SERIAL_START,{3}) = '{2}' ",V.Local.lPrefixLen,v.Args.PartFromWorkOrder,V.Args.PREFIX,V.Args.PREFIX.Length,v.Local.ssql)
+
+	f.Data.DataTable.CreateFromSQL("DTNext","CONX",V.Local.sSQL)
+	f.Intrinsic.Control.If(v.DataTable.DTNext.RowCount,>,0)
+		f.Data.DataTable.AddExpressionColumn("DTNext","NXTNo_1","long","Convert([NXTNo],'System.Int32')")
+		Function.Data.DataTable.AddExpressionColumn("DTNext", "NXTNoSerial", "long", "max(NXTNo_1)")
+		f.Intrinsic.Variable.AddRV("NXT_SERIAL",V.DataTable.DTNext(0).NXTNoSerial!FieldVal)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.Variable.AddRV("NXT_SERIAL",0)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.Control.Catch
+	f.Intrinsic.Control.CallSub(ErrorMsg, CurrentSub, v.Ambient.CurrentSubroutine)	
+f.Intrinsic.Control.EndTry
+Program.Sub.GetNextSerialNo_Parts.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$bmedina$}$20210304141115931$}$kOipCrsyLBVj2KoSwkcdK23ChxGVcBlEagSTFphI7hrYdeOoC3GeSCyI8Xt9Nsj7RRQiGno1iCg=
+Program.Sub.Comments.End
